@@ -1,0 +1,155 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js" // Standard provider
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// --- ENUMS ---
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+}
+
+enum TransactionCategory {
+  RENT_PAYMENT
+  SERVICE_CHARGE
+  UTILITIES
+}
+
+enum GoalType {
+  SAVING
+  CONTRIBUTION
+}
+
+enum RentStatus {
+  ACTIVE
+  EVICTED
+  PAST
+}
+
+// --- MODELS ---
+
+// 1. User Model (The Identity)
+// Can have a TenantProfile, LandlordProfile, or both.
+model User {
+  id              String           @id @default(uuid())
+  email           String           @unique
+  password        String?
+  firstName       String
+  lastName        String
+  middleName      String?
+  image           String?
+  tenantProfile   TenantProfile?
+  landlordProfile LandlordProfile?
+  accounts        Account[]
+  transactions    Transaction[]
+  goals           Goal[]
+  role            UserRole         @default(USER)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+}
+
+// 2. Tenant Profile
+// Exists only if the user is actively acting as a tenant
+model TenantProfile {
+  id              String     @id @default(uuid())
+  userId          String     @unique
+  user            User       @relation(fields: [userId], references: [id])
+  currentRent     Decimal    @default(0)
+  rentStatus      RentStatus @default(ACTIVE)
+  pensionProvider String?
+  pensionStatus   String?
+  leases          Lease[]
+}
+
+// 3. Landlord Profile
+// Exists only if the user lists properties
+model LandlordProfile {
+  id             String     @id @default(uuid())
+  userId         String     @unique
+  user           User       @relation(fields: [userId], references: [id])
+  verificationId String? // e.g., Government ID for landlord verification
+  properties     Property[]
+}
+
+// 4. Property (The Asset)
+// Owned by a Landlord
+model Property {
+  id          String          @id @default(uuid())
+  landlordId  String
+  landlord    LandlordProfile @relation(fields: [landlordId], references: [id])
+  name        String
+  address     String
+  description String?
+  leases      Lease[] // A property can have multiple units or leases over time
+  createdAt   DateTime        @default(now())
+}
+
+// 5. Lease (The Relationship / Contract)
+// Connects a Tenant to a Property
+model Lease {
+  id          String        @id @default(uuid())
+  tenantId    String
+  tenant      TenantProfile @relation(fields: [tenantId], references: [id])
+  propertyId  String
+  property    Property      @relation(fields: [propertyId], references: [id])
+  startDate   DateTime
+  endDate     DateTime
+  monthlyRent Decimal
+  isActive    Boolean       @default(true)
+}
+
+model Account {
+  id              String        @id @default(uuid())
+  userId          String
+  user            User          @relation(fields: [userId], references: [id])
+  bank            String
+  shortName       String
+  accountNumber   String        @unique
+  balance         Decimal
+  isSalaryAccount Boolean       @default(false)
+  isCreditLine    Boolean       @default(false)
+  colorScheme     String?
+  transactions    Transaction[]
+}
+
+model Transaction {
+  id          String              @id @default(uuid())
+  userId      String
+  user        User                @relation(fields: [userId], references: [id])
+  accountId   String
+  account     Account             @relation(fields: [accountId], references: [id])
+  date        DateTime
+  name        String
+  description String?
+  amount      Decimal
+  type        TransactionType
+  category    TransactionCategory
+}
+
+model Goal {
+  id                 String   @id @default(uuid())
+  userId             String
+  user               User     @relation(fields: [userId], references: [id])
+  title              String
+  icon               String
+  type               GoalType
+  currentAmount      Decimal
+  targetAmount       Decimal
+  contributionAmount Decimal?
+  completed          Boolean  @default(false)
+}

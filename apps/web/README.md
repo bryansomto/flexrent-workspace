@@ -1,36 +1,121 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/create-next-app).
+# FlexRent 🏠
 
-## Getting Started
+FlexRent is a financial dashboard designed to help tenants track their
+finances, verify income sources, and calculate their **Rent Power** to
+facilitate flexible rent payments.
 
-First, run the development server:
+---
+
+## 🚀 Features
+
+- **Dashboard Overview:** Visualize your financial health and Rent
+  Power coverage.\
+- **Wallet Management:** Link multiple funding sources (Salary,
+  Savings, Credit).\
+- **Transaction Tracking:** Comprehensive history with filtering by
+  Date, Account, Type, and Category.\
+- **Smart Categorization:** Automatically categorize transactions
+  (Rent, Salary, Service Charge).\
+- **Responsive Design:** Fully optimized for desktop and mobile using
+  Material UI.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Framework:** Next.js 14+ (App Router)\
+- **Language:** TypeScript\
+- **Database:** PostgreSQL\
+- **ORM:** Prisma\
+- **UI Library:** Material UI (MUI)\
+- **Package Manager:** pnpm
+
+---
+
+## 📦 Getting Started
+
+### **Prerequisites**
+
+- Node.js (v18 or higher)\
+- pnpm (`npm install-g pnpm`)\
+- PostgreSQL database
+
+---
+
+### **Installation**
+
+#### 1. Clone the repository
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/yourusername/flexrent.git
+cd flexrent
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+#### 2. Install dependencies
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load Inter, a custom Google Font.
+---
 
-## Learn More
+### **Environment Setup**
 
-To learn more about Next.js, take a look at the following resources:
+Create a `.env` file in the root directory and add your database
+connection string:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```env
+DATABASE_URL="postgresql://user:password@localhost:5432/flexrent_db?schema=public"
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+### **Database Setup (Prisma)**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Push the schema and generate the Prisma client:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+pnpm dlx prisma migrate dev --name init
+pnpm dlx prisma generate
+```
+
+---
+
+### **Run the development server**
+
+```bash
+pnpm dev
+```
+
+Then open:\
+**http://localhost:3000**
+
+---
+
+## 🗄️ Database Schema
+
+This project uses Prisma with the following core models:
+
+- **User:** The main identity\
+- **Account:** Bank accounts or credit lines linked to the user\
+- **Transaction:** Financial records linked to both User and Account
+
+To view the database GUI:
+
+```bash
+pnpm dlx prisma studio
+```
+
+---
+
+## 📄 License
+
+Distributed under the **MIT License**.
+
+---
+
+## 📞 Contact
+
+Bryan Somto - [LinkedIn](https://www.linkedin.com/in/bryansomto)
+
+Project Link: [https://github.com/bryansomto/FlexRent](https://github.com/bryansomto/FlexRent)

@@ -1,0 +1,7 @@
+{
+  "name": "analyzer-service",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "./venv/bin/uvicorn main:app --reload --port 8000"
+  }
+}

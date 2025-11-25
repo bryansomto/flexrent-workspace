@@ -1,135 +1,138 @@
-# Turborepo starter
+# FlexRent 🏠
 
-This Turborepo starter is maintained by the Turborepo core team.
+A comprehensive PropTech platform for tenant verification and rental management.
 
-## Using this example
+---
 
-Run the following command:
+## 📖 Overview
 
-```sh
-npx create-turbo@latest
+FlexRent is a microservices-based application designed to bridge the trust gap between landlords and tenants in Nigeria. It automates the vetting process using a polyglot architecture:
+
+- **Identity Verification:** Validates BVN/NIN against government databases.
+- **Income Estimation:** Parses bank statements using Python/Pandas data science libraries to determine creditworthiness.
+- **Dashboard:** A unified interface for managing rental applications.
+
+---
+
+## 🏗 Architecture
+
+This project is organized as a **monorepo** using Turborepo, allowing for shared configurations and optimized build pipelines across multiple languages.
+
+```mermaid
+graph TD
+    Client[Next.js Frontend] -->|HTTP/JSON| KYC[NestJS KYC Service]
+    Client -->|Multipart/Form| Analyzer[Python Analyzer Service]
+    KYC -->|API| Prembly[Identity Pass Mocked]
+    Analyzer -->|Pandas| PDF[Bank Statement Parsing]
 ```
 
-## What's inside?
+### Services Breakdown
 
-This Turborepo includes the following packages/apps:
+| Service     | Path                  | Port | Tech Stack                       | Description                                                                     |
+| ----------- | --------------------- | ---- | -------------------------------- | ------------------------------------------------------------------------------- |
+| Web Client  | apps/web              | 3000 | Next.js (App Router), MUI, React | The main user dashboard and tenant onboarding flow.                             |
+| KYC Service | apps/kyc-service      | 3001 | NestJS, TypeScript, Axios        | Handles PII, secure data storage, and calls to 3rd party APIs.                  |
+| Analyzer    | apps/analyzer-service | 8000 | Python, FastAPI, Pandas          | Dedicated data science service for parsing PDFs and calculating income metrics. |
 
-### Apps and Packages
+---
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+## 🚀 Getting Started
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+### Prerequisites
 
-### Utilities
+- Node.js (v18+)
+- Python (v3.9+)
+- pnpm (`npm install -g pnpm`)
 
-This Turborepo has some additional tools already setup for you:
+### Installation
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+Clone the repository:
 
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+```bash
+git clone https://github.com/yourusername/flexrent.git
+cd flexrent-workspace
 ```
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+Install JavaScript dependencies:
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
+```bash
+pnpm install
 ```
 
-### Develop
+### Setup Python Environment
 
-To develop all apps and packages, run the following command:
+Navigate to the analyzer service and create a virtual environment:
 
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
+```bash
+cd apps/analyzer-service
+python3 -m venv venv
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+Activate the virtual environment:
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
+```bash
+# Linux / macOS
+source venv/bin/activate
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
+# Windows
+venv\Scripts\activate
 ```
 
-### Remote Caching
+Install Python dependencies:
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
+```bash
+pip install -r requirements.txt
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+### Environment Variables
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+Create a `.env` file in `apps/kyc-service` (use the mock adapter for local development):
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
+```env
+NODE_ENV=development
+PORT=3001
 ```
 
-## Useful Links
+---
 
-Learn more about the power of Turborepo:
+## 🏃‍♂️ Running the App
 
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+You can start all three services simultaneously from the root directory using Turborepo:
+
+```bash
+pnpm dev
+```
+
+This will launch:
+
+- Frontend: [http://localhost:3000](http://localhost:3000)
+- KYC Backend: [http://localhost:3001](http://localhost:3001)
+- Python Analyzer: [http://localhost:8000](http://localhost:8000) (Swagger UI)
+
+---
+
+## 🛠 Features in Development
+
+- [x] Monorepo Setup (Turborepo + pnpm)
+- [x] Identity Verification (BVN check via NestJS)
+- [x] Income Verification (PDF Upload & Parsing via Python)
+- [x] Mock Adapter Pattern (Simulating API calls to save costs during dev)
+- [ ] Database Integration (PostgreSQL + Prisma)
+- [ ] User Authentication (NextAuth)
+
+---
+
+## 🧪 Testing
+
+The KYC service includes a **Mock Adapter** that simulates Nigerian Identity responses without incurring API costs:
+
+- **Success Test:** Use BVN `12345678901`
+- **Failure Test:** Use BVN `99999999999`
+
+---
+
+## 🤝 Contributing
+
+This project is a personal portfolio piece demonstrating full-stack proficiency. Feedback is welcome!
+
+Built with ❤️ by Bryan Somto

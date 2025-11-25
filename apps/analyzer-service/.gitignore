@@ -1,0 +1,24 @@
+# Virtual Environment (Huge folder, never upload this)
+.venv/
+venv/
+env/
+
+# Python Cache (Junk files)
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment Variables (Sensitive keys)
+.env
+.env.local
+
+# VS Code Settings (Personal preferences)
+.vscode/
+
+# 5. OS Junk
+.DS_Store
+Thumbs.db
+
+# test files and documents
+audit/
+testBankStatements/
