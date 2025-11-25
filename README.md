@@ -117,8 +117,8 @@ This will launch:
 - [x] Identity Verification (BVN check via NestJS)
 - [x] Income Verification (PDF Upload & Parsing via Python)
 - [x] Mock Adapter Pattern (Simulating API calls to save costs during dev)
+- [x] User Authentication (NextAuth)
 - [ ] Database Integration (PostgreSQL + Prisma)
-- [ ] User Authentication (NextAuth)
 
 ---
 
